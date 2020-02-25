@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+
+            <p:layout fullPage="true">
+
+                <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
+                    Header
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                    Footer
+                </p:layoutUnit>
+
+                <p:layoutUnit position="west" size="175" header="Left" collapsible="true">
+                    <p:menu>
+                        <p:submenu label="Resources">
+                            <p:menuitem value="Demo" url="http://www.primefaces.org/showcase-labs/ui/home.jsf" />
+                            <p:menuitem value="Documentation" url="http://www.primefaces.org/documentation.html" />
+                            <p:menuitem value="Forum" url="http://forum.primefaces.org/" />
+                            <p:menuitem value="Themes" url="http://www.primefaces.org/themes.html" />
+
+                        </p:submenu>
+
+                    </p:menu>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    Welcome to PrimeFaces
+                    <h:form id="form">
+                        <p:outputLabel id="idTitulo" value="Productos" />
+
+                        <p:dataTable var="prod" value="#{welcomeController.lista}" widgetVar="prodTable1"
+                                     emptyMessage="No cars found with given criteria">
+
+                            <f:facet name="header">
+                                <p:outputLabel value="Tabla Productos"/>
+                            </f:facet>
+
+                            <p:column  headerText="Item" sortBy="#{prod.item}">
+                                <h:outputText value="#{prod.item}" />
+                            </p:column>
+                            <p:column headerText="Nombre">
+                                <h:outputText value="#{prod.nombre}" />
+                            </p:column>
+                            <p:column headerText="Cantidad" >
+                                <h:outputText value="#{prod.cantidad}" />
+                            </p:column>
+                            <p:column headerText="CodInventario" >
+                                <h:outputText value="#{prod.codInventario}" />
+                            </p:column>
+                            <p:column style="width:32px;text-align: center" headerText="Ver">
+                                <p:commandButton update=":form:outProd" oncomplete="PF('dialog').show()" title="Ver">
+                                    <f:setPropertyActionListener value="#{prod}" target="#{welcomeController.seleccionado}" />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column style="width:32px;text-align: center" headerText="Borra">
+                                <p:commandButton update=":form:eliminaProd" oncomplete="PF('dialog2').show()" title="X">
+                                    <f:setPropertyActionListener value="#{prod}" target="#{welcomeController.seleccionado}" />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column style="width:32px;text-align: center" headerText="Agrega">
+                                <p:commandButton update=":form:altaProd" oncomplete="PF('dialog3').show()" title="+">
+                                    <f:setPropertyActionListener value="#{prod}" target="#{welcomeController.seleccionado}" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:dialog header="Informacion de Producto" widgetVar="dialog" showEffect="fade" hideEffect="fade" closable="true">
+                            <p:outputPanel id="outProd" style="text-align:center;">
+                                <p:panelGrid  columns="2"  columnClasses="label,value">
+                                    <f:facet name="header">
+                                        Producto
+                                    </f:facet>
+
+                                    <h:outputText value="Id:" />
+                                    <h:outputText value="#{welcomeController.seleccionado.item}" />
+                                    <h:outputText value="Nombre:" />
+                                    <h:outputText value="#{welcomeController.seleccionado.nombre}" />
+                                    <h:outputText value="Cantidad:" />
+                                    <h:outputText value="#{welcomeController.seleccionado.cantidad}" />
+                                    <h:outputText value="Codigo:" />
+                                    <h:outputText value="#{welcomeController.seleccionado.codInventario}" />
+                                    <p:commandButton update="@form" oncomplete="PF('dialog').close()" value="Cerrar" title="Cerrar">                                    
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                        <p:dialog header="Eliminar Producto" widgetVar="dialog2" showEffect="fade" hideEffect="fade" closable="true">
+                            <p:outputPanel id="eliminaProd" style="text-align:center;">
+                                <p:panelGrid  columns="2"  columnClasses="label,value">
+                                    <f:facet name="header">
+                                        Producto
+                                    </f:facet>
+
+                                    <h:outputText value="Id:" />
+                                    <h:outputText value="#{welcomeController.seleccionado.item}" />
+                                    <h:outputText value="Nombre:" />
+                                    <h:outputText value="#{welcomeController.seleccionado.nombre}" />
+                                    <h:outputText value="Cantidad:" />
+                                    <h:outputText value="#{welcomeController.seleccionado.cantidad}" />
+                                    <h:outputText value="Codigo:" />
+                                    <h:outputText value="#{welcomeController.seleccionado.codInventario}" />
+                                    <p:commandButton update="@form" oncomplete="PF('dialog2').close()" value="Cerrar" title="Cerrar">
+                                    </p:commandButton>
+                                    <p:commandButton update="@form" oncomplete="PF('dialog2').close()" actionListener="#{welcomeController.elimina()}" value="Eliminar" title="Cerrar">                                    
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                        <p:dialog header="Agregar Producto" widgetVar="dialog3" showEffect="fade" hideEffect="fade" closable="true">
+                            <p:outputPanel id="altaProd" style="text-align:center;">
+                                <p:panelGrid  columns="2"  columnClasses="label,value">
+                                    <f:facet name="header">
+                                        Producto
+                                    </f:facet>
+
+                                    <h:outputText value="Item:" />
+                                    <h:inputText value="#{welcomeController.seleccionado.item}" />
+                                    <h:outputText value="Nombre:" />
+                                    <h:inputText value="#{welcomeController.seleccionado.nombre}" />
+                                    <h:outputText value="Cantidad:" />
+                                    <h:inputText value="#{welcomeController.seleccionado.cantidad}" />
+                                    <h:outputText value="Codigo:" />
+                                    <h:inputText value="#{welcomeController.seleccionado.codInventario}" />
+                                    <p:commandButton update="@form" oncomplete="PF('dialog').close()" actionListener="#{welcomeController.agrega()}" value="Agregar">                                    
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
+</html>
+
